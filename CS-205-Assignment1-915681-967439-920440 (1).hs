@@ -1,6 +1,5 @@
 import Test.QuickCheck
 import Data.Char
-import System.IO  
 import System.Directory
 import Data.List.Split
 -- Question 1 a ---------------------------------------------------------------------------------
@@ -41,7 +40,7 @@ testifsorted (x:y:ys) = (x <= y) && testifsorted (y:ys)
 insertelememt :: Ord a => a -> [a] -> [a]
 insertelememt x [] = [x]
 insertelememt x (y:ys) = if x < y then x:y:ys
-			else y:insertelememt x ys
+            else y:insertelememt x ys
 
 splitlist :: [a] -> ([a], [a])
 splitlist xs = (take ((length xs) `div` 2)  xs, drop ((length xs) `div` 2) xs)
@@ -50,7 +49,7 @@ merge :: Ord a => [a] -> [a] -> [a]
 merge xs [] = xs
 merge [] xs = xs
 merge (x:xs) (y:ys) | (x < y) = x:merge xs (y:ys)
-					| otherwise = y:merge (x:xs) ys
+                    | otherwise = y:merge (x:xs) ys
 
 insertionsort :: Ord a => [a] -> [a]
 insertionsort [] = []
@@ -72,8 +71,8 @@ mergesort :: Ord a => [a] -> [a]
 mergesort [] = []
 mergesort [x] = [x]
 mergesort xs | (length xs) > 1 = merge (mergesort ls) (mergesort rs)
-			 | otherwise = xs
-			 where (ls, rs) = splitlist xs
+             | otherwise = xs
+             where (ls, rs) = splitlist xs
 -- this is a mergesort and below shown the sample input and output 
 -- *Main> mergesort [12,35,21,61,32,84,31,5132,54]
 -- [12,21,31,32,35,54,61,84,5132]
@@ -131,8 +130,8 @@ countPrimeTwins n = length (filter isPrimeTwins (primeListBelow n))
 -- this is the function to list out all cities has been visited on the journey.
 visitedCities :: Int -> [Int]
 visitedCities n = if n == 1 then [n]
-			else if even n then [n]++visitedCities(n `div` 2)
-			else [n]++visitedCities (n*3+1)
+            else if even n then [n]++visitedCities(n `div` 2)
+            else [n]++visitedCities (n*3+1)
 
 -- *Main> visitedCities 967439
 -- [967439,2902318,1451159,4353478,2176739,6530218,3265109,9795328,4897664,2448832,
@@ -197,28 +196,10 @@ theLargestCityVisited = \x -> findLargestCities (visitedCities x)
 
 -- Question 5   ---------------------------------------------------------------------------------
 
--- main = do fileString <- readFile "surname.txt"
---   let splitted = splitOn "\n" fileString
---   putString splitted
+--Note: The reading from the file did work in concept somewhat, but we couldn't find a solution to obtaining the parent filepath
+--to work this, uncomment the code and change the filepath to point to the location of the surnames file
 
--- surnames = \x -> surnameList 
-
--- readAllTheLines :: Handle -> IO [String]
--- readAllTheLines hndl = do
---    eof <- hIsEOF hndl
---    notEnded eof
---   where notEnded False =  do
---           line <- hGetLine hndl
---           rest <- readAllTheLines hndl
---           return (line:rest)
---         notEnded True = return []
-
--- surnameList :: IO [String]
--- surnameList = do
---   hndl <- openFile "surname.txt" ReadMode
---   readAllTheLines hndl 
-
-  -- let filePath = concat [getCurrentDirectory,"surnames.txt"]
+{--
 surnameList = do
   fileString <- readFile "surnames.txt"
   let splitted = splitOn "\n" fileString
@@ -226,14 +207,15 @@ surnameList = do
   -- let mapped = map ignoreNonAlphabetic splitted
   -- let finalArray = matchingNameArray splitted
   print splitted
+--}
 
 surnames = ["Smith","Smyth","Smythe","Smid","Schmidt","Smithers","Jonas","Johns","Johnson","Macdonald","Nest O'Malett","Ericsson","Erikson","Saunas","Van Damme"]
 dischargeLetters = "aeihouwy"
 equivalentLetter = [('1',"aeiou"),
-					('2',"cgjkqsxyz"),
-					('3',"bfpvw"),
-					('4',"dt"),
-					('5',"mn")]
+                    ('2',"cgjkqsxyz"),
+                    ('3',"bfpvw"),
+                    ('4',"dt"),
+                    ('5',"mn")]
 
 -- [("Smith","254"),("Smyth","254"),("Smythe","254"),("Smythe","254"),("Schmidt","254"),("Smithers","25462"),
 -- ("Jonas","252"),("Johns","252"),("Johnson","2525"),("Macdonald","524564"),("Nest O'Malett","5241564"),
@@ -252,7 +234,7 @@ convertChar c = convertChar' c equivalentLetter
          | c `notElem` cls = convertChar' c clss
          | otherwise      = cs
 
--- this function used to dischrage letter AEIHOUWY after the first letter 
+-- this function used to discharge letter AEIHOUWY after the first letter 
 dischargeLetterFunction :: String -> String
 dischargeLetterFunction (x:xs) = x:[r | r <- (ignoreNonAlphabetic xs), r `notElem` dischargeLetters ]
 
@@ -262,8 +244,8 @@ filterConsecutive :: String -> String
 filterConsecutive [] = []
 filterConsecutive [x] = [x]
 filterConsecutive (x1:x2:xs)
-	| x1==x2 = filterConsecutive (x2:xs)
-	| otherwise = x1:filterConsecutive(x2:xs)
+    | x1==x2 = filterConsecutive (x2:xs)
+    | otherwise = x1:filterConsecutive(x2:xs)
 
 -- this function is used to convert the user name to classed string 
 changeString :: String -> String
@@ -284,4 +266,7 @@ matchingName xs = matchingName' xs (zip surnames (filterNames surnames))
 
 matchingNameArray :: [String] -> [[String]]
 matchingNameArray xs = [ matchingName x | x<-xs]
+
+-- *Main> matchingNameArray ["Jones","Winton"]
+-- [["Jonas","Johns","Saunas"],["Van Damme"]]
 
